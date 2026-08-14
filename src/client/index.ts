@@ -321,9 +321,11 @@ export function apply(ctx) {
 
   let suggesterDisposer = null
   let designerDisposer = null
+  const appliedSync = { clearSuggester: null }
   function disposeAll() {
     if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null }
     if (designerDisposer) { designerDisposer(); designerDisposer = null }
+    if (appliedSync.clearSuggester) appliedSync.clearSuggester()
   }
   ctx.effect(function () {
     return function () { disposeAll() }
@@ -409,6 +411,10 @@ export function apply(ctx) {
     const bs = React.useState(function () { return randomBatch('random', 8) }), batch = bs[0], setBatch = bs[1]
     const ms = React.useState('light'), mode = ms[0], setMode = ms[1]
     const as = React.useState(null), appliedKey = as[0], setAppliedKey = as[1]
+    React.useEffect(function () {
+      appliedSync.clearSuggester = function () { setAppliedKey(null) }
+      return function () { appliedSync.clearSuggester = null }
+    }, [])
     const apply = function (t) { disposeAll(); suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, t.tokens); persistTheme(t.tokens); setAppliedKey(t.key) }
     const reset = function () { disposeAll(); clearPersistedTheme(); setAppliedKey(null) }
     const regenerate = function () { setBatch(randomBatch(h, 8)) }
