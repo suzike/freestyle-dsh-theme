@@ -10,6 +10,7 @@ export const inject = ['slots']
 
 const SUGGESTER_SOURCE = 'auto-theme-proposer'
 const DESIGNER_SOURCE = 'theme-designer'
+const PERSIST_KEY = 'freestyle-dsh-theme:last'
 
 const CSS = `
 .VOzbGW_panel{width:1120px !important;height:min(840px,100vh - 48px) !important;}
@@ -327,6 +328,23 @@ export function apply(ctx) {
     }
   })
 
+  function persistTheme(tokens) {
+    try { localStorage.setItem(PERSIST_KEY, JSON.stringify(tokens)) } catch (e) {}
+  }
+  function clearPersistedTheme() {
+    try { localStorage.removeItem(PERSIST_KEY) } catch (e) {}
+  }
+  function restorePersistedTheme() {
+    try {
+      const raw = localStorage.getItem(PERSIST_KEY)
+      if (!raw || !theme) return
+      const tokens = JSON.parse(raw)
+      if (tokens && typeof tokens === 'object' && Object.keys(tokens).length > 0) {
+        suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, tokens)
+      }
+    } catch (e) {}
+  }
+
   function MiniPreview(p) {
     const bg = p['--dsw-alias-bg-base']
     const layer = p['--dsw-alias-bg-layer-1']
@@ -388,10 +406,10 @@ export function apply(ctx) {
   function Suggester() {
     const hs = React.useState('random'), h = hs[0], setH = hs[1]
     const bs = React.useState(function () { return randomBatch('random', 8) }), batch = bs[0], setBatch = bs[1]
-    const ms = React.useState('dark'), mode = ms[0], setMode = ms[1]
+    const ms = React.useState('light'), mode = ms[0], setMode = ms[1]
     const as = React.useState(null), appliedKey = as[0], setAppliedKey = as[1]
-    const apply = function (t) { suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, t.tokens); setAppliedKey(t.key) }
-    const reset = function () { if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null } setAppliedKey(null) }
+    const apply = function (t) { suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, t.tokens); persistTheme(t.tokens); setAppliedKey(t.key) }
+    const reset = function () { if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null } clearPersistedTheme(); setAppliedKey(null) }
     const regenerate = function () { setBatch(randomBatch(h, 8)) }
     return el('div', { className: 'atp-wrap' },
       el('div', { className: 'atp-head' },
@@ -428,7 +446,7 @@ export function apply(ctx) {
   }
 
   function Designer() {
-    const ts = React.useState(function () { return defaultTokens('dark') }), t = ts[0], setT = ts[1]
+    const ts = React.useState(function () { return defaultTokens('light') }), t = ts[0], setT = ts[1]
     const chs = React.useState('th'), channel = chs[0], setChannel = chs[1]
     const ls = React.useState({ th: false, th2: false, ths: false }), locks = ls[0], setLocks = ls[1]
     const nms = React.useState(''), name = nms[0], setName = nms[1]
@@ -490,8 +508,8 @@ export function apply(ctx) {
       patch(next)
     }
     const toggleLock = function (k) { setLocks(Object.assign({}, locks, { [k]: !locks[k] })) }
-    const applyNow = function () { designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(t)); setApplied(true); flash('已应用') }
-    const resetAll = function () { if (designerDisposer) { designerDisposer(); designerDisposer = null } setApplied(false); setT(defaultTokens('dark')); flash('已恢复默认') }
+    const applyNow = function () { designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(t)); persistTheme(generateTokens(t)); setApplied(true); flash('已应用') }
+    const resetAll = function () { if (designerDisposer) { designerDisposer(); designerDisposer = null } clearPersistedTheme(); setApplied(false); setT(defaultTokens('light')); flash('已恢复默认') }
     const aiName = async function () {
       if (aiBusy) return
       setAiBusy(true)
@@ -673,4 +691,6 @@ export function apply(ctx) {
       function () { return el(ThemeGeneralItem) },
     )
   })
+
+  restorePersistedTheme()
 }
