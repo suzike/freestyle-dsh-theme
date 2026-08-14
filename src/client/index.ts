@@ -321,11 +321,12 @@ export function apply(ctx) {
 
   let suggesterDisposer = null
   let designerDisposer = null
+  function disposeAll() {
+    if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null }
+    if (designerDisposer) { designerDisposer(); designerDisposer = null }
+  }
   ctx.effect(function () {
-    return function () {
-      if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null }
-      if (designerDisposer) { designerDisposer(); designerDisposer = null }
-    }
+    return function () { disposeAll() }
   })
 
   function persistTheme(tokens) {
@@ -408,8 +409,8 @@ export function apply(ctx) {
     const bs = React.useState(function () { return randomBatch('random', 8) }), batch = bs[0], setBatch = bs[1]
     const ms = React.useState('light'), mode = ms[0], setMode = ms[1]
     const as = React.useState(null), appliedKey = as[0], setAppliedKey = as[1]
-    const apply = function (t) { suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, t.tokens); persistTheme(t.tokens); setAppliedKey(t.key) }
-    const reset = function () { if (suggesterDisposer) { suggesterDisposer(); suggesterDisposer = null } clearPersistedTheme(); setAppliedKey(null) }
+    const apply = function (t) { disposeAll(); suggesterDisposer = theme.overrideTokens(SUGGESTER_SOURCE, t.tokens); persistTheme(t.tokens); setAppliedKey(t.key) }
+    const reset = function () { disposeAll(); clearPersistedTheme(); setAppliedKey(null) }
     const regenerate = function () { setBatch(randomBatch(h, 8)) }
     return el('div', { className: 'atp-wrap' },
       el('div', { className: 'atp-head' },
@@ -417,7 +418,7 @@ export function apply(ctx) {
         el('div', { style: { flex: 1 } }),
         el('button', { className: 'atp-btn', onClick: function () { setMode(mode === 'light' ? 'dark' : 'light') } }, mode === 'light' ? '预览浅色' : '预览深色'),
         el('button', { className: 'atp-btn', onClick: regenerate }, '换一批'),
-        el('button', { className: 'atp-btn', onClick: reset, disabled: appliedKey === null }, '恢复默认'),
+        el('button', { className: 'atp-btn', onClick: reset }, '恢复默认'),
       ),
       el('div', { className: 'atp-row' },
         el('span', { className: 'atp-section-label' }, '配色关系'),
@@ -461,7 +462,7 @@ export function apply(ctx) {
     const flash = function (m) { setMsg(m) }
     const commit = function (next) {
       setT(next)
-      if (livePreview) { designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(next)); setApplied(true) }
+      if (livePreview) { disposeAll(); designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(next)); setApplied(true) }
     }
     const patch = function (partial) { commit(Object.assign({}, t, partial)) }
 
@@ -508,8 +509,8 @@ export function apply(ctx) {
       patch(next)
     }
     const toggleLock = function (k) { setLocks(Object.assign({}, locks, { [k]: !locks[k] })) }
-    const applyNow = function () { designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(t)); persistTheme(generateTokens(t)); setApplied(true); flash('已应用') }
-    const resetAll = function () { if (designerDisposer) { designerDisposer(); designerDisposer = null } clearPersistedTheme(); setApplied(false); setT(defaultTokens('light')); flash('已恢复默认') }
+    const applyNow = function () { disposeAll(); const tokens = generateTokens(t); designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, tokens); persistTheme(tokens); setApplied(true); flash('已应用') }
+    const resetAll = function () { disposeAll(); clearPersistedTheme(); setApplied(false); setT(defaultTokens('light')); flash('已恢复默认') }
     const aiName = async function () {
       if (aiBusy) return
       setAiBusy(true)
@@ -556,15 +557,15 @@ export function apply(ctx) {
           el('label', { className: 'atp-row', style: { fontSize: 12, color: 'var(--dsw-alias-label-secondary)', cursor: 'pointer', marginRight: 4 } },
             el('input', { type: 'checkbox', checked: livePreview, onChange: function (e) {
               const on = e.target.checked; setLivePreview(on)
-              if (on) { designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(t)); setApplied(true) }
-              else if (designerDisposer) { designerDisposer(); designerDisposer = null; setApplied(false) }
+              if (on) { disposeAll(); designerDisposer = theme.overrideTokens(DESIGNER_SOURCE, generateTokens(t)); setApplied(true) }
+              else { disposeAll(); setApplied(false) }
             } }),
             ' 实时预览',
           ),
           msg ? el('span', { className: 'atp-sub', style: { marginTop: 0 } }, msg) : null,
           el('div', { style: { flex: 1 } }),
           el('button', { className: 'atp-btn primary', onClick: applyNow }, '应用主题'),
-          el('button', { className: 'atp-btn', onClick: resetAll, disabled: !applied }, '恢复默认'),
+          el('button', { className: 'atp-btn', onClick: resetAll }, '恢复默认'),
         ),
       ),
       el('div', { className: 'td-grid' },
