@@ -40,6 +40,22 @@
 
 ---
 
+## 📸 实际界面
+
+> 以下为软件内真实设置页面截图（设置 → 通用 → 主题 → 自定义…）。
+
+<div align="center">
+  <img src="docs/images/screenshot-proposer.png" alt="主题提案 · 实际界面" width="100%" />
+  <p><b>主题提案</b> · 6 套风格预设 + 8 套智能提案，点卡片即应用</p>
+</div>
+
+<div align="center">
+  <img src="docs/images/screenshot-designer.png" alt="主题设计器 · 实际界面" width="100%" />
+  <p><b>主题设计器</b> · 主色 / 副色 / 面板独立通道 + 实时预览 + 通道锁定 + JSON 导入导出</p>
+</div>
+
+---
+
 ## 📐 架构
 
 <div align="center">
