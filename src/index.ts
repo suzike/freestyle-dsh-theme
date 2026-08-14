@@ -1,12 +1,12 @@
 // @ts-nocheck
 /**
- * dsh-theme — host half. Registers the /api/dsh-theme/name route that names a
+ * freestyle-dsh-theme — host half. Registers the /api/freestyle-dsh-theme/name route that names a
  * theme through the default model (llm.stream). The browser half (./client)
  * renders the theme proposer + designer in the settings panel.
  */
 import type { Context } from '@deepseek-ai/cordis'
 
-export const name = 'dsh-theme'
+export const name = 'freestyle-dsh-theme'
 export const inject = ['webServer']
 
 const NAME_SYSTEM_PROMPT = '你是品牌色彩与界面主题命名专家。分析给定的 OKLCH 主题令牌，为它生成独特、具体且有画面感的中文主题身份。只输出 JSON：{"name":"2到8个汉字的主题名","tags":["3到5个简短特征标签"],"desc":"20到50字的主题特征介绍"}。名称不能使用"我的主题""自定义主题"等泛称；标签应覆盖色彩、明暗、材质和氛围，不要重复名称；介绍应说明主副色关系与适用感受。'
@@ -37,7 +37,7 @@ async function readJsonBody(req) {
 function makeNameRoute(ctx) {
   return {
     kind: 'exact',
-    path: '/api/dsh-theme/name',
+    path: '/api/freestyle-dsh-theme/name',
     handler: async (req, res) => {
       if (req.method !== 'POST') {
         writeJson(res, 405, { error: 'method not allowed' })
@@ -88,5 +88,5 @@ function makeNameRoute(ctx) {
 }
 
 export function apply(ctx: Context): void {
-  ctx.effect(() => ctx.webServer.register(makeNameRoute(ctx)), 'dsh-theme: name route')
+  ctx.effect(() => ctx.webServer.register(makeNameRoute(ctx)), 'freestyle-dsh-theme: name route')
 }

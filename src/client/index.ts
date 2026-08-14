@@ -1,8 +1,8 @@
 // @ts-nocheck
 /**
- * dsh-theme — browser half. Registers the 「主题」settings section with the
+ * freestyle-dsh-theme — browser half. Registers the 「主题」settings section with the
  * OKLCH theme proposer + designer, applies themes through theme.overrideTokens,
- * widens the settings panel, and names themes via /api/dsh-theme/name.
+ * widens the settings panel, and names themes via /api/freestyle-dsh-theme/name.
  */
 import React from 'react'
 
@@ -75,10 +75,10 @@ export function apply(ctx) {
 
   // Inject the plugin stylesheet (removed on dispose).
   const styleTag = document.createElement('style')
-  styleTag.dataset.plugin = 'dsh-theme'
+  styleTag.dataset.plugin = 'freestyle-dsh-theme'
   styleTag.textContent = CSS
   document.head.appendChild(styleTag)
-  ctx.effect(() => () => { styleTag.remove() }, 'dsh-theme: css')
+  ctx.effect(() => () => { styleTag.remove() }, 'freestyle-dsh-theme: css')
 
   const slots = ctx.slots
   const theme = ctx.get('theme')
@@ -496,7 +496,7 @@ export function apply(ctx) {
       if (aiBusy) return
       setAiBusy(true)
       try {
-        const response = await fetch('/api/dsh-theme/name', {
+        const response = await fetch('/api/freestyle-dsh-theme/name', {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ tokens: toInput(t) }),

@@ -1,5 +1,5 @@
 {
-  "name": "@linxin666/dsh-theme",
+  "name": "@linxin666/freestyle-dsh-theme",
   "description": "DeepSeek Harness (DSH) 主题体验插件：OKLCH 主题提案 + 主题设计器（独立色相/彩度/明度通道、通道锁定、配色关系与快速变体、AI 命名、JSON 导入导出），并放大设置面板宽度。作为 web 插件热插拔安装，跨重启保留。",
   "version": "0.1.0",
   "type": "module",

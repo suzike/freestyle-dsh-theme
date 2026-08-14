@@ -1,5 +1,5 @@
 /**
- * Standalone build config for the dsh-theme plugin.
+ * Standalone build config for the freestyle-dsh-theme plugin.
  *
  * Uses the repo's shared client-bundle preset (shared/tsdown.client.ts):
  * node-half lib/ (host AI-naming route) plus the browser bundle lib/client.js
@@ -8,7 +8,7 @@
  */
 import { clientBundle } from './shared/tsdown.client.ts'
 
-export default clientBundle('@linxin666/dsh-theme', ['src/index.ts'], {
+export default clientBundle('@linxin666/freestyle-dsh-theme', ['src/index.ts'], {
   libExternal: [
     '@deepseek-ai/dsh-host-webserver',
     '@deepseek-ai/dsh-settings',

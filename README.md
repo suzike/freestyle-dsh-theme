@@ -1,16 +1,16 @@
-# dsh-theme
+# freestyle-dsh-theme
 
 <div align="center">
-  <img src="docs/images/banner.svg" alt="dsh-theme banner" width="100%" />
+  <img src="docs/images/banner.svg" alt="freestyle-dsh-theme banner" width="100%" />
 </div>
 
 <p align="center">
-  <a href="https://github.com/suzike/dsh-theme/releases"><img src="https://img.shields.io/github/v/release/suzike/dsh-theme?style=flat-square&label=version" alt="version"></a>
+  <a href="https://github.com/suzike/freestyle-dsh-theme/releases"><img src="https://img.shields.io/github/v/release/suzike/freestyle-dsh-theme?style=flat-square&label=version" alt="version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-BSD--3--Clause-blue.svg?style=flat-square" alt="license"></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%5E22.19%20%7C%7C%20%3E%3D24-green.svg?style=flat-square" alt="node"></a>
 </p>
 
-**dsh-theme** 是 [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/DeepSeek-Harness) 的 Web GUI 主题体验插件：基于 **OKLCH 色彩模型**，提供「主题提案」与「主题设计器」两大能力，让用户**一键换肤、自由调色**。作为常驻 Web 插件热插拔安装，**跨重启持久化**。
+**freestyle-dsh-theme** 是 [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/DeepSeek-Harness) 的 Web GUI 主题体验插件：基于 **OKLCH 色彩模型**，提供「主题提案」与「主题设计器」两大能力，让用户**一键换肤、自由调色**。作为常驻 Web 插件热插拔安装，**跨重启持久化**。
 
 ---
 
@@ -65,8 +65,8 @@
 ### 1. 克隆并构建
 
 ```bash
-git clone https://github.com/suzike/dsh-theme.git
-cd dsh-theme
+git clone https://github.com/suzike/freestyle-dsh-theme.git
+cd freestyle-dsh-theme
 pnpm install
 pnpm build
 ```
@@ -80,7 +80,7 @@ pnpm build
 ```json
 {
   "dependencies": {
-    "@linxin666/dsh-theme": "link:../path/to/dsh-theme"
+    "@linxin666/freestyle-dsh-theme": "link:../path/to/freestyle-dsh-theme"
   }
 }
 ```
@@ -90,7 +90,7 @@ pnpm build
 ```yaml
 - insert:
     - id: theme
-      name: '@linxin666/dsh-theme'
+      name: '@linxin666/freestyle-dsh-theme'
 ```
 
 然后：
@@ -118,9 +118,9 @@ pnpm install
 ## 🗂️ 目录结构
 
 ```
-dsh-theme/
+freestyle-dsh-theme/
 ├── src/
-│   ├── index.ts              # Host 半：/api/dsh-theme/name AI 命名路由
+│   ├── index.ts              # Host 半：/api/freestyle-dsh-theme/name AI 命名路由
 │   └── client/
 │       └── index.ts          # Client 半：主题提案 + 设计器 UI
 ├── shared/                   # 客户端打包预设（tsdown）
@@ -142,7 +142,7 @@ git tag v0.1.0
 git push --tags
 ```
 
-版本历史见 [Releases](https://github.com/suzike/dsh-theme/releases)。
+版本历史见 [Releases](https://github.com/suzike/freestyle-dsh-theme/releases)。
 
 ---
 
